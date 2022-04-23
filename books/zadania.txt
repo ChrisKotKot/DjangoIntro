@@ -1,0 +1,52 @@
+1. Bedac na branchu z function_based_view utwórz nowy branch orm_models
+2. Wejdz do klasy django.contrib.auth.models.User i odczytaj jakie atrybuty/pola ma ta klasa
+3. Dodaj kilku (np. 3) super userów
+4. Uruchom django shell
+5. Korzystając z modelu wbudowanego django przeznaczonego dla admina. W konsoli (shell) pobierz wszystkich User-ów i wyswietl ich w petli for
+6. Wyswietl wszystkie nazwy userow w shellu w petli z zadania 5
+7. W konsoli django przygotuj zapytanie jak w zadaniach poprzednich ale nie wykonuj go. Zobacz co zwraca metoda bez iteracji.
+8. Wejdz do klasy django.db.models.QuerySet i zobacz co ma w środku
+9. Wydrukuj SQL query z queryset-u.
+10. Dodaj własny model Author ktory ma atrybut name
+11. Dodaj model Category ktory posiada pole name.
+12. Dodaj własny model Book  z polami title, authors, published_date, categories, average_rating. Pamietaj o ustaleniu relacji z autorem i kategoria.
+13. Przygotuj migrację bazodanową i wykonaj ją.
+14. Otrzymany plik z danymi bazodanowymi SQLite zaimportuj do swojego projektu.
+15. Wyswietl ile jest autorów w bazie, kategorii oraz ksiązek.
+16. Wyfiltruj tylko ksiązki opublikowane przed 2021 rokiem.
+17. Wyfiltruj ksiązki opublikowane po 2021 roku.
+18. Wyflitruj ksiązki opublikowane miedzy 2018 a 2022 rokiem.
+19. Wyfiltruj ksiazki ktore zawieraja w tytule frazy "Harry"
+20. Wyfiltruj ksiazki ktorych tytuly posiadaja frazy "Harry" i "Tolkien"
+21. Wyswietl autorów ktorych nazwy nie zanieraja imie Eric.
+22. Sprawdz czy istnieja autorzy ktorych nazwa zawiera "William".
+23. Wyswietl ksiazki ktore posiadaja autora o nazwie Eric i posortuj je wg daty malejaco.
+24. Wyswietl sredni rating ksiazke z uzyciem metody aggregate
+25. Dodaj autora ksiazki poprzez metodę create
+26. Dodaj kategorie ksiazki poprzez metode save
+27. Usun dodanego autora i kategorie metodą delete.
+* Ponizej Zadanie specjalne symulator zadania rekrutacyjnego
+28. Na podstawie API ktorego dokumentacja jest pod linkiem:
+https://developers.google.com/books/docs/v1/using
+oraz danych znajdującej się na stronie naprzykladowej stronie
+ https://www.googleapis.com/books/v1/volumes?q=Hobbit
+ zaprojektuj i stwórz aplikację w wybranym przez siebie frameworku, która będzie posiadała proste REST API:
+GET /books - lista wszystkich książek (widok powinien pozwalać na filtrowanie i sortowanie po roku przykład : /books?published_date=1995, /books?sort=-published_date)
+GET /books?author="Jan Kowalski"&author="Anna Kowalska" - lista książek zadanych autorów
+GET /books/<bookId> - wybrana książka
+{
+"title": "Hobbit czyli Tam i z powrotem",
+"authors": ["J. R. R. Tolkien"],
+"published_date": "2004",
+"categories": [
+"Baggins, Bilbo (Fictitious character)"
+],
+"average_rating": 5,
+"ratings_count": 2,
+}
+POST /db z body {"q": "war"}
+ściągnąć data set z https://www.googleapis.com/books/v1/volumes?q=war
+# inne istotne ciekawostki o ktore rowniez czasem pytaja na rekrutacjach
+https://buildatscale.tech/select_related-vs-prefetch_related/
+https://buildatscale.tech/what-is-django-model-manager/
+https://stackoverflow.com/questions/7981837/difference-between-djangos-annotate-and-aggregate-methods
