@@ -24,7 +24,7 @@ class Book(models.Model):
     average_rating = models.FloatField(null=True)
 
     def __str__(self):
-        return f"{self.tile} - {self.authors} - {self.published_date}"
+        return f"{self.title} - {self.authors} - {self.published_date}"
 
 class Topic():
     pass
