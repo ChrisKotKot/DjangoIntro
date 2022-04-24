@@ -3,11 +3,13 @@ from uuid import uuid4
 from django.core.exceptions import BadRequest
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, JsonResponse
+from django.urls import reverse_lazy
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import TemplateView, ListView, DetailView, FormView
 
+from books.forms import CategoryForm
 from books.models import BookAuthor, Category, Book
 import logging
 logger = logging.getLogger("chris")
@@ -41,7 +43,22 @@ class BookDetailsView(DetailView):
 	def get_object(self, **kwargs):
 		return get_object_or_404(Book, id=self.kwargs.get("pk"))
 
+class CategoryCreateFormView(FormView):
+	template_name = "category_form.html"
+	form_class = CategoryForm
+	success_url = reverse_lazy("category_list")
 
+	def form_invalid(self, form):
+		logger.critical(f"FORM CRITICAL ERROR, More info:{form}")
+		return super().form_invalid(form)
+
+	def form_valid(self, form):
+		result = super().form_valid(form)
+		logger.info(f"form = {form}")
+		logger.info(f"form.cleaned_data = {form.cleaned_data}")  # cleaned means with removed html indicators
+		check_entity = Category.objects.create(**form.cleaned_data)
+		logger.info(f"check_entity-id={check_entity.id}")
+		return result
 # 11.
 
 def get_hello(request: WSGIRequest) -> HttpResponse:
