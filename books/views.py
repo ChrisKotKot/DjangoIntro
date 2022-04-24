@@ -3,83 +3,85 @@ from uuid import uuid4
 from django.core.exceptions import BadRequest
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render
+from django.views.generic import TemplateView
 
-from books.models import BookAuthor
+from books.models import BookAuthor, Category
 
 
 class AuthorListBaseView(View):
     template_name = "author_list.html"
-    queryset = BookAuthor._prefetched_objects_cache.all()  # type: ignore
+    queryset = BookAuthor.objects.all()  # type: ignore
 
     def get(self, request: WSGIRequest, *args, **kwargs):
         context = {"authors": self.queryset}
         return render(request, template_name=self.template_name, context=context)
 
+class CategoryListTemplateView(TemplateView):
+    template_name = "category_list.html"
+    extra_context = {"categories":Category.objects.all()} # type: ignore
+
+
+# 11.
 
 def get_hello(request: WSGIRequest) -> HttpResponse:
-    hello = "hello world"
-    return render(request, template_name="hello_worldd.html", context= {"hello_var": hello})
+    hello = "Hello world!"
+    return render(request, template_name="Hello_world.html", context={"hello_var": hello})
 
+# 12.
 
 def get_uuids_a(request: WSGIRequest) -> HttpResponse:
-    # uuids = [str(uuid4()) for _ in range(10)] - konwersja na str: str(zmienna) | f"{zmienna}"
     uuids = [f"{uuid4()}" for _ in range(10)]
-    return render(request, template_name="uuids_a.html", context={"elements":uuids})
+    return render(request, template_name="uuids_a.html", context={"elements": uuids})
     #return HttpResponse(f"uuids={uuids}")
-
 
 def get_uuids_b(request: WSGIRequest) -> JsonResponse:
     uuids = [f"{uuid4()}" for _ in range(10)]
-    return JsonResponse({"uuids": uuids})
+    return JsonResponse({"uuids":uuids})
 
-
-def get_fun1(request: WSGIRequest) -> HttpResponse:
-    return HttpResponse(4 + 4)
-
-
-def get_fun2(request: WSGIRequest) -> HttpResponse:
-    return HttpResponse("raz" + "Dwa")
-
+# 13.
 
 def get_argument_from_path(request: WSGIRequest, x: int, y: str, z: str) -> HttpResponse:
-    return HttpResponse(f'x={x}, y={y}, z={z}')
-    # return HttpResponse('test stringa')
-    # path('path-args/<int:first_arg>/<str:second_arg>/<slug:third_arg>/', get_argument_from_path, name="path_args"),
+    return HttpResponse(f"x = {x}, y = {y}. z = {z}")
 
+# 14.
 
-def get_arguents_from_query(request: WSGIRequest) -> HttpResponse:
+def get_argument_from_query(request: WSGIRequest, x: int, y: str, z: str) -> HttpResponse:
     a = request.GET.get("a")
     b = request.GET.get("b")
     c = request.GET.get("c")
-    print(type(a))
+    print(type(int(a)))
+    return HttpResponse("Test")
 
-    return HttpResponse(f'a={a}, b={b}, c={c}')
+# 15.
 
 @csrf_exempt
 def check_http_query_type(request: WSGIRequest) -> HttpResponse:
-    # query_type = 'Unknown'
-    # if request.method == "GET":
-    #     query_type = "This is GET"
-    # elif request.method == "POST":
-    #     query_type = "This is POST"
+    #query_type = "Unknown"
+    #if request.method == "GET":
+    #    query_type = "To jest GET"
+    # elif request.method == "PAST":
+    #     query_type = "To jest PAST"
     # elif request.method == "PUT":
-    #     query_type = "This is PUT"
+    #     query_type = "To jest PUT"
     # elif request.method == "DELETE":
-    #     query_type = "This is DELETE"
-    #
+    #     query_type = "To jest DELETE"
     # return HttpResponse(query_type)
-    return render(request, template_name="methods.html", context={})
+    return render(request, template_name="method.html", context={})
 
-def get_headers(request:WSGIRequest) -> JsonResponse:
+# 21.
+
+def get_headers(request: WSGIRequest) -> HttpResponse:
     our_headers = request.headers
 
     return JsonResponse({"headers": dict(our_headers)})
 
+# 22.
+
 @csrf_exempt
 def raise_error_for_fun(request: WSGIRequest) -> HttpResponse:
     if request.method != "GET":
-        raise BadRequest("Method not allowed")
-
-    return HttpResponse('Wszystko ok')
+        raise BadRequest ("method not allowes")
+    return HttpResponse("Wszystko GIT")
