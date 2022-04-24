@@ -25,3 +25,6 @@ class Book(models.Model):
 
     def __str__(self):
         return f"{self.tile} - {self.authors} - {self.published_date}"
+
+class Topic():
+    pass
