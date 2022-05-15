@@ -1,5 +1,6 @@
 from uuid import uuid4
 
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import BadRequest
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, JsonResponse
@@ -106,9 +107,18 @@ class BookDeleteView(DeleteView):
 		return get_object_or_404(Book, id=self.kwargs.get("pk"))
 
 
+@login_required
 def get_hello(request: WSGIRequest) -> HttpResponse:
-	hello = "hello world"
-	return render(request, template_name="hello_world.html", context={"hello_var": hello})
+    user: User = request.user  # type: ignore
+    # password = None if user.is_anonymous else user.password
+    # email = None if user.is_anonymous else user.email
+    # date_joined = None if user.is_anonymous else user.date_joined
+    # if not user.is_authenticated:
+    #     # raise PermissionDenied()
+    #     return HttpResponseRedirect(reverse('login'))
+    is_auth: bool = user.is_authenticated
+    hello = f"Hello {user.username}. That's your password: {user.password}, your email: {user.email} and date you joined: {user.date_joined}"
+    return render(request, template_name="hello_world.html", context={"hello_var":hello, "is_authenticated": is_auth})
 
 
 # 12. Utwórz funkcję zwracającą listę stringów. Stringi niech będą losowym UUID dodawanym do listy. Lista niech posiada 10 elementów.
